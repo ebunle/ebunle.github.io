@@ -11,7 +11,7 @@ This website serves as a platform to showcase my research, projects, and academi
 - **Home Page:** Introduction and summary of my work.
 - **Research Section:** Detailed descriptions of my research interests and projects.
 - **Publications Section:** List of my publications with links.
-- **About Me Section:** Biography, CV, and contact information.
+- **About Me Section:** Biography, and contact information.
 
 ## Customization Choices
 - Advanced customization with CSS for styling.
