@@ -12,24 +12,34 @@ body {
     display: flex;
     flex-direction: column;
     min-height: 100vh; /* Ensures the footer stays at the bottom */
-    font-size: 20px; /* Increased font size */
+    font-size: 16px; /* Increased font size *//* Better base font size for mobile */
 }
 
 header {
     background: #007acc; /* Your original background color */
     color: white;
-    padding: 15px; /* Padding for the header */
+    padding: 15px 20px; /* Adjusted padding */ /* 15px; /* Padding for the header */
     display: flex; /* Use flexbox for layout */
     align-items: center; /* Center items vertically */
 }
 
-.header-profile-pic {
+.header-profile-pic-old-not-in-used {
     width: 150px; /* Enlarged size */
     height: auto; /* Maintain aspect ratio */
     /*border-radius: 50%; /* Circular image */
     margin-right: 20px; /* Space between image and text */
     border: 2px solid #007acc; ; /* Optional: border for better visibility */
 }
+
+.header-profile-pic {
+    width: 120px; /* Smaller for mobile */
+    height: 120px;
+    border-radius: 50%; /* Circular image */
+    margin-right: 20px;
+    border: 3px solid white;
+    object-fit: cover; /* Ensures image fills circle properly */
+}
+
 
 .header-text {
     text-align: left; /* Align text to the left */
@@ -179,3 +189,4 @@ h3 {
     }
 
 }
+
