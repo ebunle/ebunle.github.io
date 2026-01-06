@@ -88,6 +88,7 @@ nav ul li a:hover {
      color: #005fa3; /* Dark text color on hover */
     border-radius: 5px;
     font-weight: bold; /* Make text bold on hover */
+    
 }
 
 main {
@@ -95,6 +96,7 @@ main {
     padding: 20px;
     max-width: 1200px; /* Limits the width of the main content */
     margin: 0 auto; /* Centers the main content */
+     width: 100%;
 }
 
 section {
@@ -192,6 +194,7 @@ h3 {
     }
 
 }
+
 
 
 
