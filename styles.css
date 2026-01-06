@@ -40,6 +40,21 @@ header {
        /* object-fit: cover;  /* Ensures image fills circle properly */
 }
 
+@media (min-width: 768px) {
+    /* Tablet and larger screens */
+    .header-content {
+        flex-direction: row;
+        justify-content: flex-start;  /* ← This left-aligns everything */
+        text-align: left;             /* ← This left-aligns text */
+    }
+    
+    .header-profile-pic {
+        margin-right: 20px;  /* ← This pushes text to the right, keeping image left */
+    }
+}
+
+
+
 
 .header-text {
     text-align: left; /* Align text to the left */
@@ -194,6 +209,7 @@ h3 {
     }
 
 }
+
 
 
 
