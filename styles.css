@@ -73,7 +73,7 @@ nav ul {
 }
 
 nav ul li {
-    margin: 0 15px;
+   margin: 5px 10px; /* Smaller margins for mobile */
 }
 
 nav ul li a {
@@ -190,6 +190,7 @@ h3 {
     }
 
 }
+
 
 
 
