@@ -37,7 +37,7 @@ header {
     border-radius: 50%; /* Circular image */
     margin-right: 20px;
     border: 3px solid white;
-    object-fit: cover; /* Ensures image fills circle properly */
+     /* object-fit: cover;  /* Ensures image fills circle properly */
 }
 
 
@@ -190,6 +190,7 @@ h3 {
     }
 
 }
+
 
 
 
