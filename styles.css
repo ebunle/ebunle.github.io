@@ -214,68 +214,78 @@ h3 {
 
 /* ============VIDEO SECTION===============================*/
 
-
 .video-container {
-    margin-top: 20px;
-    padding: 15px;
-    background-color: #f8f9fa;
-    border-radius: 8px;
+    margin: 25px 0;
+    padding: 0;
+    background-color: transparent;
+    border-radius: 0;
+    border: none;
 }
 
 .video-container h5 {
-    margin-bottom: 10px;
-    color: #333;
+    margin-bottom: 15px;
+    color: #222;
+    font-size: 1.2em;
+    font-weight: 600;
+    text-align: center;
 }
-
-.video-wrapper {
-    position: relative;
-    padding-bottom: 56.25%; /* 16:9 aspect ratio */
-    height: 0;
-    overflow: hidden;
-}
-
-.video-wrapper iframe {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-}
-
-.video-caption {
-    font-size: 0.9em;
-    color: #666;
-    margin-top: 10px;
-    font-style: italic;
-}
-
-
-
-
-
-
-
 
 .research-video-wrapper {
-    width: 560px; /* Standard width similar to research papers */
-    height: 315px; /* 16:9 aspect ratio */
-    margin: 0 auto 15px;
-    overflow: hidden;
+    width: 100%;
+    max-width: 600px; /* Typical research figure width */
+    margin: 0 auto;
+    text-align: center;
     border: 1px solid #ddd;
-    border-radius: 3px;
+    border-radius: 4px;
+    padding: 10px;
     background-color: #fff;
     box-shadow: 0 2px 4px rgba(0,0,0,0.05);
 }
 
 .research-video {
     width: 100%;
-    height: 100%;
-    object-fit: cover; /* or 'contain' if you don't want cropping */
+    height: auto;
+    max-height: 400px; /* Typical research figure aspect ratio */
+    display: block;
+    border-radius: 3px;
 }
 
+.video-caption {
+    font-size: 0.95em;
+    color: #555;
+    margin-top: 12px;
+    font-style: normal;
+    text-align: center;
+    line-height: 1.5;
+    font-family: Georgia, 'Times New Roman', Times, serif;
+}
 
+/* For better mobile responsiveness */
+@media (max-width: 768px) {
+    .research-video-wrapper {
+        max-width: 100%;
+        padding: 8px;
+    }
+    
+    .research-video {
+        max-height: 350px;
+    }
+}
 
-
+@media (max-width: 480px) {
+    .research-video-wrapper {
+        max-width: 100%;
+    }
+    
+    .research-video {
+        max-height: 300px;
+    }
+    
+    .video-caption {
+        font-size: 0.9em;
+        padding: 0 10px;
+    }
+}
 
 
 
