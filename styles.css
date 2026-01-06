@@ -256,6 +256,30 @@ h3 {
 
 
 
+.research-video-wrapper {
+    width: 560px; /* Standard width similar to research papers */
+    height: 315px; /* 16:9 aspect ratio */
+    margin: 0 auto 15px;
+    overflow: hidden;
+    border: 1px solid #ddd;
+    border-radius: 3px;
+    background-color: #fff;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+
+.research-video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover; /* or 'contain' if you don't want cropping */
+}
+
+
+
+
+
+
+
+
 
 
 
