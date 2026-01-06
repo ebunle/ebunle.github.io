@@ -32,8 +32,8 @@ header {
 }
 
 .header-profile-pic {
-    width: 120px; /* Smaller for mobile */
-    height: 120px;
+    width: 125px; /* Smaller for mobile */
+    height: 125px;
     border-radius: 50%; /* Circular image */
     margin-right: 20px;
     border: 3px solid white;
@@ -189,4 +189,5 @@ h3 {
     }
 
 }
+
 
