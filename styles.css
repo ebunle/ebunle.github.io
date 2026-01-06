@@ -37,7 +37,7 @@ header {
     border-radius: 50%; /* Circular image */
     margin-right: 20px;
     border: 3px solid white;
-      object-fit: cover;  /* Ensures image fills circle properly */
+       /* object-fit: cover;  /* Ensures image fills circle properly */
 }
 
 
@@ -133,10 +133,12 @@ h3 {
     transform: scale(1.05); /* Slightly enlarge on hover */
 }
 
+/* Links */
 .lab-link {
-    font-weight: bold; 
-    color: #0056b3; 
-    text-decoration: underline; /* Styling for the link */
+    font-weight: bold;
+    color: #0056b3;
+    text-decoration: underline;
+    word-break: break-word; /* Prevent long URLs from breaking layout */
 }
 
 
@@ -190,6 +192,7 @@ h3 {
     }
 
 }
+
 
 
 
