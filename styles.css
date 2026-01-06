@@ -69,6 +69,7 @@ nav ul {
     justify-content: center;
     list-style: none;
     padding: 10px;
+    flex-wrap: wrap; /* Allow wrapping on mobile */
 }
 
 nav ul li {
@@ -189,6 +190,7 @@ h3 {
     }
 
 }
+
 
 
 
