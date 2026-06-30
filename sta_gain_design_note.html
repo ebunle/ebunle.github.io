@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>STA Gain Design Note: Estimating L and Computing the Gains</title>
+<script>
+window.MathJax = {
+  tex: { inlineMath: [['\\(','\\)']], displayMath: [['$$','$$']] },
+  svg: { fontCache: 'global' }
+};
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-svg.js"></script>
+<style>
+  :root{
+    --ink:#1a1a1a; --muted:#5a5a5a; --line:#e0ddd6; --bg:#faf8f3;
+    --accent:#7a4d2b; --accent2:#2b5a7a; --warn:#8a5a00; --warnbg:#fdf6e3;
+    --code:#f0ece3; --boxbg:#fff;
+  }
+  *{box-sizing:border-box}
+  body{
+    margin:0; background:var(--bg); color:var(--ink);
+    font-family:Georgia,'Times New Roman',serif; line-height:1.65;
+    font-size:17px;
+  }
+  .wrap{max-width:820px; margin:0 auto; padding:56px 28px 96px;}
+  h1{font-size:30px; line-height:1.25; margin:0 0 6px; font-weight:700;}
+  .sub{color:var(--muted); font-style:italic; margin:0 0 36px; font-size:17px;}
+  h2{font-size:22px; margin:44px 0 12px; padding-bottom:6px; border-bottom:2px solid var(--line);}
+  h3{font-size:18px; margin:30px 0 8px; color:var(--accent);}
+  p{margin:12px 0;}
+  .aside{
+    background:var(--warnbg); border-left:4px solid var(--warn);
+    padding:14px 18px; margin:24px 0; font-size:15.5px; color:#4a3a10;
+  }
+  .aside strong{color:var(--warn);}
+  .step{
+    background:var(--boxbg); border:1px solid var(--line); border-radius:8px;
+    padding:18px 20px; margin:18px 0;
+  }
+  .step .lab{
+    display:inline-block; font-family:'SF Mono',Consolas,monospace;
+    font-size:12px; letter-spacing:.08em; text-transform:uppercase;
+    color:#fff; background:var(--accent2); padding:3px 10px; border-radius:4px;
+    margin-bottom:8px;
+  }
+  code{font-family:'SF Mono',Consolas,monospace; background:var(--code);
+    padding:1px 6px; border-radius:4px; font-size:14.5px;}
+  pre{background:#23201b; color:#e8e2d4; padding:16px 18px; border-radius:8px;
+    overflow-x:auto; font-size:13.5px; line-height:1.5;}
+  pre code{background:none; padding:0; color:inherit;}
+  table{border-collapse:collapse; width:100%; margin:18px 0; font-size:15px;}
+  th,td{border:1px solid var(--line); padding:8px 12px; text-align:left;}
+  th{background:#efe9df;}
+  td.num{font-family:'SF Mono',Consolas,monospace; text-align:right;}
+  .result{background:#eef4ee; border-left:4px solid #2b7a3a; padding:12px 18px; margin:18px 0;}
+  .foot{margin-top:48px; padding-top:18px; border-top:1px solid var(--line);
+    color:var(--muted); font-size:14px;}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<h1>Super-Twisting Gain Design: How <em>L</em> Was Estimated and the Procedure Gains Computed</h1>
+<p class="sub">A worked design note. This is an aside for the design board, not part of the paper. The paper presents the gain condition as a sufficient bound (Option A); this note records how the procedure-derived gains were obtained, in case the design is revisited.</p>
+
+<div class="aside">
+<strong>Why this is an aside.</strong> The procedure below produces gains roughly one to two orders of magnitude larger than the working gains \((\beta=1.5\times10^{10},\ \alpha=5.5\times10^5)\). That gap is expected: the condition is <em>sufficient, not necessary</em>, so smaller gains can still converge. The paper keeps the working gains and frames the condition as a conservative safe envelope. This note simply shows the arithmetic behind the larger numbers.
+</div>
+
+<h2>1. What <em>L</em> actually is</h2>
+<p>In the super-twisting analysis the perturbation entering the sliding-variable dynamics is \(\delta_i(\mathbf{x},t)\), the residual left after the equivalent control cancels the nominal drift. The theorem does not bound \(\delta\) itself; it bounds its rate of change,</p>
+$$ |\dot{\delta}_i(\mathbf{x},t)| \;\le\; L_i . $$
+<p>So \(L\) is the <em>Lipschitz constant of the perturbation</em> — a ceiling on how fast the mismatch can move. The integral gain \(\beta\) must be large enough for the STA integrator to track a disturbance changing at rate up to \(L\). This is why the gain condition depends on \(L\) and not on the size of \(\delta\).</p>
+
+<h2>2. Identifying \(\delta\) for the inverter</h2>
+<p>In the parameter-mistune scenario the controller believes \(R_f\) is 50% too large. The resistance enters the drift vector \(a(\mathbf{x})\) through the term \(\tfrac{1}{L_fC_f}(-R_f\,i)\). With a wrong belief \(R_{f,\mathrm{bel}}=1.5\,R_f\), the equivalent control fails to cancel a residual</p>
+$$ \delta \;\approx\; \frac{1}{L_fC_f}\,\big(R_{f,\mathrm{bel}}-R_f\big)\,i \;=\; \frac{\Delta R_f}{L_fC_f}\,i,\qquad \Delta R_f = 0.5\,R_f . $$
+<p>The mismatch is therefore proportional to the axis current \(i(t)\). Everything else in \(a(\mathbf{x})\) is cancelled correctly, so this resistance term is the dominant residual.</p>
+
+<h2>3. The estimation procedure, step by step</h2>
+
+<div class="step">
+<span class="lab">Step 1 — form \(\delta(t)\)</span>
+<p>Take the realized current \(i(t)\) from an actual simulation run and build the residual time series using the coefficient above:</p>
+<pre><code>dRf   = 0.5 * Rf
+delta_d = (1/(Lf*Cf)) * dRf * id(t)
+delta_q = (1/(Lf*Cf)) * dRf * iq(t)</code></pre>
+</div>
+
+<div class="step">
+<span class="lab">Step 2 — differentiate</span>
+<p>\(L\) bounds \(\dot\delta\), so take the numerical time derivative of the residual:</p>
+<pre><code>ddelta_d = gradient(delta_d, t)
+ddelta_q = gradient(delta_q, t)</code></pre>
+</div>
+
+<div class="step">
+<span class="lab">Step 3 — bound it</span>
+<p>\(L\) is the maximum absolute rate over the regime of interest:</p>
+<pre><code>L = max( |ddelta_d| , |ddelta_q| )   over the chosen window</code></pre>
+</div>
+
+<div class="aside">
+<strong>The catch that drives everything.</strong> The answer depends entirely on <em>which window</em> you maximize over. At the step instant the current jumps, so \(\dot\delta\) spikes. Once the operating point is fixed, \(\delta\) becomes a bounded constant and \(\dot\delta\to 0\). These two regimes differ by about two orders of magnitude, which is the whole reason the procedure gains and the working gains disagree.
+</div>
+
+<h2>4. The two values of <em>L</em></h2>
+<table>
+<tr><th>Regime</th><th>What it captures</th><th class="num">\(L\) (1/s scale)</th></tr>
+<tr><td>Steady-state (post-transient)</td><td>Fixed operating point; \(\delta\) nearly constant</td><td class="num">6.5 × 10<sup>5</sup></td></tr>
+<tr><td>Transient (at the step)</td><td>Worst-case rate at the disturbance instant</td><td class="num">5.8 × 10<sup>7</sup></td></tr>
+</table>
+<p>Your own STA section argues that at a fixed operating point the inverter mismatch is a bounded constant — that is the steady-state row, the \(L\to 0\) favorable case where any positive gains formally suffice. The transient row is the conservative worst case.</p>
+
+<h2>5. Running the procedure</h2>
+<p>The design procedure, with the typical constants from the paper \((c_\sigma=1.5,\ c_\beta=2.4,\ c_\alpha=4.5)\):</p>
+$$ \sigma = c_\sigma L,\qquad \beta = c_\beta\,c_\sigma^{2}L^{2},\qquad \alpha = c_\alpha\sqrt{\beta}. $$
+
+<h3>Using steady-state \(L = 6.5\times10^5\)</h3>
+<table>
+<tr><th>Gain</th><th class="num">Procedure</th><th class="num">Working</th><th class="num">Ratio</th></tr>
+<tr><td>\(\beta\)</td><td class="num">2.3 × 10<sup>12</sup></td><td class="num">1.5 × 10<sup>10</sup></td><td class="num">≈ 150×</td></tr>
+<tr><td>\(\alpha\)</td><td class="num">6.8 × 10<sup>6</sup></td><td class="num">5.5 × 10<sup>5</sup></td><td class="num">≈ 12×</td></tr>
+</table>
+
+<h3>Using transient \(L = 5.8\times10^7\)</h3>
+<table>
+<tr><th>Gain</th><th class="num">Procedure</th><th class="num">Working</th><th class="num">Ratio</th></tr>
+<tr><td>\(\beta\)</td><td class="num">1.8 × 10<sup>16</sup></td><td class="num">1.5 × 10<sup>10</sup></td><td class="num">≈ 10<sup>6</sup>×</td></tr>
+<tr><td>\(\alpha\)</td><td class="num">6.1 × 10<sup>8</sup></td><td class="num">5.5 × 10<sup>5</sup></td><td class="num">≈ 10<sup>3</sup>×</td></tr>
+</table>
+
+<div class="result">
+<strong>Both procedure outputs satisfy</strong> \(\alpha>4\sqrt{\beta}\), so they are internally valid STA gains. They are simply far more conservative than necessary — the price of a sufficient condition.
+</div>
+
+<h2>6. If you ever go the procedure way (Option B)</h2>
+<p>To make the gains literally come from the procedure, you would:</p>
+<p>1. Commit to one \(L\). The defensible choice is the steady-state operating-point value, consistent with the bounded-constant argument already in the paper.</p>
+<p>2. Accept the larger gains the procedure returns from that \(L\).</p>
+<p>3. Re-run the full simulation with those gains and verify behavior — larger STA gains raise control effort and can increase steady ripple, so the chattering and peak-control results would need re-checking.</p>
+<p>4. Report the chosen \(c_\sigma, c_\beta, c_\alpha\) and the resulting \((\alpha,\beta)\) as the designed pair.</p>
+
+<div class="aside">
+<strong>Recommendation on the shelf.</strong> Option A remains preferable: keep the working gains, present the condition as a sufficient design-oriented bound, show this \(L\)-estimation method so a reader can size their own plant, and note that the working gains lie within the sufficient region. That framing survives a reviewer who understands the sufficient-versus-necessary gap — and it costs no re-run.
+</div>
+
+<p class="foot">Worked design note. Numbers reproduced from the Python port of the inverter simulation. Aside only — not part of the manuscript.</p>
+
+</div>
+</body>
+</html>
